@@ -1,0 +1,4 @@
+# Endereco provisorio. Quem barra o buscador e a meta robots do
+# index.html, que precisa ser lida para valer. Ver publicar.py.
+User-agent: *
+Allow: /
