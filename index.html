@@ -706,6 +706,63 @@ body.travada{overflow:hidden}
   </div>
 </section>
 
+<section class="campo verde" id="orcamento">
+  <div class="dentro">
+    <div class="fala" data-sobe>
+      <div>
+        <span class="rotulo">FALE COM A KAZA</span>
+        <h2 class="titulo" style="margin:26px 0 20px">PROJETO E<br>ORÇAMENTO.</h2>
+        <p>Escreva o seu pedido aqui e ele abre no WhatsApp da KAZA já
+        redigido, com o que você preencheu. É por onde a marcenaria atende.</p>
+      </div>
+
+      <form class="form" id="form-kaza" method="get"
+            action="https://api.whatsapp.com/send">
+        <input type="hidden" name="phone" value="5562983320304">
+        <div class="par">
+          <div>
+            <label class="lab" for="f-nome">NOME</label>
+            <input id="f-nome" name="nome" type="text" required
+                   autocomplete="name" maxlength="120">
+          </div>
+          <div>
+            <label class="lab" for="f-email">E-MAIL</label>
+            <input id="f-email" name="email" type="email" required
+                   autocomplete="email" maxlength="160">
+          </div>
+        </div>
+        <div class="par">
+          <div>
+            <label class="lab" for="f-zap">WHATSAPP</label>
+            <input id="f-zap" name="whatsapp" type="tel" autocomplete="tel"
+                   placeholder="(62) 90000-0000" maxlength="24">
+          </div>
+          <div>
+            <label class="lab" for="f-quem">VOCÊ É</label>
+            <select id="f-quem" name="quem">
+              <option>Cliente</option>
+              <option>Arquiteto ou designer</option>
+              <option>Outro</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="lab" for="f-msg">O QUE VOCÊ QUER FAZER</label>
+          <textarea id="f-msg" name="mensagem" required maxlength="3000"></textarea>
+        </div>
+
+        <input class="mel" type="text" name="_honey" tabindex="-1"
+               autocomplete="off" aria-hidden="true">
+
+        <button class="btn" type="submit"><span>ENVIAR PELO WHATSAPP</span></button>
+        <p class="estado" id="f-estado" role="status" aria-live="polite"></p>
+        <p class="aviso">Ao enviar, você concorda em ser contatado pela KAZA
+        sobre o seu projeto. Nada é gravado nesta página.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
 <footer class="rodape" id="visita">
   <div class="dentro">
     <div>
@@ -1016,6 +1073,30 @@ setTimeout(function(){
   }
   addEventListener('scroll', aoRolar, { passive: true });
   aoRolar();
+
+  var frm = document.getElementById('form-kaza');
+  if (frm) frm.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var est = document.getElementById('f-estado');
+    var v = function (id) {
+      var e = document.getElementById(id);
+      return e ? e.value.trim() : '';
+    };
+    if (v('f-nome') && v('f-email') === '' && v('f-zap') === '') {
+      est.className = 'estado estado--erro';
+      est.textContent = 'DEIXE UM E-MAIL OU UM WHATSAPP.';
+      return;
+    }
+    var linhas = ['Olá! Vim pelo site da KAZA Ambientes.', '',
+                  'Nome: ' + v('f-nome')];
+    if (v('f-email')) linhas.push('E-mail: ' + v('f-email'));
+    if (v('f-zap')) linhas.push('WhatsApp: ' + v('f-zap'));
+    linhas.push('Sou: ' + v('f-quem'), '', v('f-msg'));
+    est.className = 'estado';
+    est.textContent = 'ABRINDO O WHATSAPP...';
+    window.open('https://api.whatsapp.com/send?phone=5562983320304&text='
+      + encodeURIComponent(linhas.join('\n')), '_blank', 'noopener');
+  });
 })();
 </script>
 
