@@ -882,7 +882,13 @@ setTimeout(function(){
       setTimeout(fim, 420);
       // 2130 = 750ms depois de o pingo assentar. A pausa foi pedida para
       // dar tempo de olhar o logo pronto antes de ele sair para o canto.
-    }, 2130);
+      //
+      // O ATRASO E CONTADO DO INICIO DA PAGINA, nao de agora. As fases sao
+      // animacoes de CSS e comecam quando a pagina pinta; este script mora no
+      // fim do documento e comeca depois - numa pagina de 6,4 MB isso deu
+      // 3118ms de abertura num dos motores, contra o teto de 3s. Descontando o
+      // que ja passou, o pouso cai sempre em 2130ms de pagina.
+    }, Math.max(0, 2130 - (performance.now ? performance.now() : 0)));
   })();
 
   var lupa = document.getElementById('lupa');
